@@ -1,0 +1,59 @@
+/*
+ * @Author: liuyong
+ * @Date: 2020-12-29 10:03:37
+ * @LastEditTime: 2020-12-30 10:16:47
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \web\css\register.css
+ */
+ @charset "utf-8";
+ #left{
+     width: 540px;
+     height: 1000px;
+     /*固定定位*/
+     position: fixed;   
+     left: 0px;
+     top: 0px;
+     /*导入背景图，x轴不懂，y向上挪动40px*/
+     background: url(../images/01-1.jpg) 0px -40px;
+     /*background-size: 480px 100%;*/
+     background-size:cover;
+     /*infinite循环，step-end关闭淡入淡出*/
+     animation: loop 10s infinite step-end;
+     
+
+     
+ }
+ /*时间间隔内*/
+ @keyframes loop{
+     25%{
+            background-image: url('../images/01-2.jpg');
+            /*1,1,1(x,y,z),值为1为沿着此轴旋转。3d沿着x轴旋转*/
+            /*transform: rotate3d(1,0,0,60deg);*/
+        }
+     50%{
+            background-image: url('../images/01-3.jpg');
+            /*transform: rotate3d(1,1,1,-60deg);*/
+        }
+     75%{
+            background-image: url('../images/01-4.jpg');
+            /*transform: rotate3d(1,1,0,30deg);*/
+        }
+     100%{
+            background-image: url('../images/01-1.jpg');
+            /*transform: rotate3d(0,1,1,-30deg);*/
+        }
+ }
+ #app{
+     border: 0px solid red;
+     width: 480px;
+     margin: 100px auto 0;
+     /*在原始位置，距离左边80px*/
+     position: relative;
+     left: 200px;
+ }
+ #face{
+     width:100px;
+     height: 100px;
+     border-radius: 50%;
+ }

@@ -1,0 +1,147 @@
+<!--
+ * @Author: liuyong
+ * @Date: 2021-1-6 14:30:54
+ * @LastEditTime: 2021-01-06 14:30:29
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \web\register.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ注册</title>
+    <!--在网页的页签上加入一个小icon图标-->
+    <link rel="shortcut icon" href="images/qq.ico" type="image/x-icon">
+    <!--引入register.css文件-->
+    <link rel="stylesheet" href="css/register.css">
+    <!--引入饿了么UI的CSS文件-->
+    <link rel="stylesheet" href="css/index.css">
+    
+</head>
+<body>
+
+    <!--img src="data:image/jpeg;base64,"-->
+
+    <!--div#left+tab-->
+    <div id="left"></div> 
+    <!--表单注册区域的div容器-->
+    <div id="app">
+        <el-form :model="user" :rules="rules" ref="myform" label-width="100px" class="demo-ruleForm">
+
+            <el-form-item prop="account">
+                <el-input placeholder="请输入要注册的账号" v-model="user.account"></el-input>
+            </el-form-item>
+
+            <el-form-item prop="password">
+                <el-input placeholder="请输入要注册的密码" show-password v-model="user.password"></el-input>
+            </el-form-item>
+            
+            <el-form-item style="text-align: center;">
+                <input id="faceFile" style="display:none" type="file" @change="showImg">
+                <el-image id="face"  @click="showFile" :src="user.face">
+            </el-form-item>
+
+            <el-form-item>
+                <el-button @click="register" style="width: 384px" type="primary">立即注册</el-button>
+            </el-form-item>
+
+        </el-form>
+        
+    </div>
+    
+    
+    <!--引入vue/ajax/饿了么框架-->
+    <script src="js/vue.js"></script>
+    <!--发送数据包-->
+    <script src="js/axios.min.js"></script>
+    <script src="js/index.js"></script>
+    <!--申明脚本区-->
+    <script>
+        var app = new Vue({
+            el: '#app',    //vue框架作用域该app节点内 
+            //数据区域,e1,data,methods是固定写法，内部的变量名和方法名
+            //可以随意取名
+            data: {
+                user:{
+                    account: null,
+                    password: null,
+                    face: 'images/default_face.png'
+                },
+                rules:{
+                    account:[
+                        {required:true,message:'请输入账号！', trigger:'blur'},
+                        {min:2,max:20,message:'账号信息不少于2个字符且不能超过20个字符', trigger:'blur'}
+                    ],
+                    password:[
+                        {required:true,message:'请输入密码！', trigger:'blur'},
+                        {min:2,max:10,message:'账号信息不少于2个字符且不能超过10个字符', trigger:'blur'}
+                    ]
+                }
+            },
+            //方法区域
+            methods: {
+                register(){
+                    this.$refs['myform'].validate((valid) => {
+                        if (valid) {
+                            //把要注册的数据发送给java后端
+                            console.log(this.user);
+                            console.log(this.user.account);
+                            //alert('submit!');
+                            //127.0.0.1此ip地址表示自己的地址,then表示请求成功后执行的方法
+                            axios.post("http://42.192.145.158:8080/api/register",this.user)
+                            .then(res => {
+                                if(res.data.code == 200){
+                                    this.$message({
+                                        message:'注册成功!',
+                                        type:'success',
+                                        center:true,
+                                        showClose:true,
+                                        onClose:e =>{
+                                            //保存登陆人信息
+                                            sessionStorage.setItem("user",this.user.account);
+                                            //跳转到聊天窗口
+                                            location = 'chat.html';
+
+                                        }
+                                    });
+                                }else{
+                                    this.$message.error({
+                                        message: res.data.message
+                                    });
+                                }
+                                
+                                //console.log(res);
+                            })
+                        }
+                    });
+                },
+                showValue() {
+                    alert(this.account);
+                },
+                showFile(){
+                    document.querySelector("#faceFile").click();
+                },
+                showImg(e) {
+                    //因为this只能在该方法中用，在子方法用不了，所以用这个变量临时保存
+                    var vueThis = this;
+                    //得到用户选择的文件
+                    var v = e.target.files[0];
+                    //把它转为base64编码
+                    var reader = new FileReader();
+                    //对变量v进行转码
+                    reader.readAsDataURL(v);
+                    //转码完成后，回去执行这个方法
+                    reader.onload = function(r){
+                        vueThis.user.face = r.target.result;
+                    }
+                    
+                }
+               
+            }
+        });
+    </script>
+    
+</body>
+</html>

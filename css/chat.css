@@ -1,0 +1,144 @@
+@charset "utf-8";
+#main{
+    margin:auto;
+    width:800px;
+    height:540px;
+    border:1px solid #ccc;/*边框 1个像素 实线条 灰色*/
+    border-radius:3px;  /*圆角*/
+    box-shadow:0 0 5px #e0e0e0;  /*x轴，y轴 5个大小的阴影*/
+    display:flex;  /*弹性布局，子容器可以并排显示*/
+}
+#left{
+    width:80%;
+}
+#right{
+    border-left: 1px solid #ccc;
+    width:20%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#records{
+    padding: 5px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    /*calc 计算*/
+    height:calc(60% - 1px);
+    border-bottom: 1px solid #ccc;
+    font-size: 12px;
+    font-family: "SF Pro SC", "HanHei SC", "SF Pro Text", "Myriad Set Pro", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+#tools{
+    height:5%;
+   
+}
+#contents{
+    height:25%;
+    outline: none;
+    padding:0px 10px;  /*内间距*/
+    box-sizing: border-box;  /*取消padding-box的增大效果*/
+    overflow-y: auto;  /*内容处，添加垂直滚动条*/
+    word-wrap: break-word;  /*兼容其他浏览器*/
+}
+#buttons{    
+    height:10%;
+    text-align: right;
+    padding-right:10px;
+    box-sizing: border-box;
+}
+#contents_text{
+    width:calc(100% - 4px);
+    height:calc(100% - 20px);
+    /*无边框*/
+    border: none;
+    /*不可拖动大小*/
+    resize: none;
+    outline: none;
+
+}
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 20px;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #9d9d9d;
+}
+.online{
+    /*行高*/
+    line-height: 30px;
+    font-family: "SF Pro SC","HanHei SC","SF Pro Text","Myriad Set Pro","SF Pro Icons","PingFang SC","Helvetica Neue","Helvetica","Arial",sans-serif;
+    font-size: 14px; 
+}
+.face{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    /*垂直对齐文本*/
+    vertical-align: middle;
+    /*距离右边6个像素*/
+    margin-right:6px;
+}
+.text1{
+    width:90px;
+    display: inline-block;
+    user-select: none;
+}
+.jianbian{
+    /*谷歌渐变效果*/
+    user-select: none;
+    position: relative;
+    left: -1px;
+    width: 10px;
+    display: inline-block;
+    background: linear-gradient(to right,black,white);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+.record_face{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    vertical-align: top;
+}
+.nickname{color: #666;}
+
+.r{
+    display: flex;
+    float: left;
+}
+
+.rr{
+    display: flex; 
+    float: right;
+}
+
+.r_left{
+    width: 30px;
+    height: 30px;
+}
+.r_right{margin-top: 10px;}
+
+.message_bg{
+    background-color: #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    /*让消息气泡横向不溢出*/
+    word-wrap:break-word;
+    max-width: 560px;
+    display:inline-block;
+}
+
+.message_bg_me{
+    background-color:palegreen;
+    padding: 10px;
+    border-radius: 5px;
+    /*让消息气泡横向不溢出*/
+    word-wrap:break-word;
+    max-width: 560px;
+    display:inline-block;
+}
+.message_line{
+    clear:both;
+    height:45px;
+}

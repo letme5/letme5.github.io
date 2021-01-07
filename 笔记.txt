@@ -1,0 +1,38 @@
+HTML/CSS/JS	前端界面开发的必备基础技能
+JQuery	Vue.js	Reactjs	AngularJs	  BootStrap
+
+Java后端开发：
+SpringMVC
+Mybatis
+SpringBoot
+Redis
+
+云端操作:
+1. 检查redis 数据库是否有打开
+   redis-cli  进去如果是127.0.0.1:6379就是打开了的
+   如果是no connect 就代表没有启动
+   那么先去启动redis数据库
+   启动方式
+   1.1   cd /usr/local/red...快捷补充 tab
+   1.2   redis-server redis.conf
+2. 检查java后台程序是否启动
+   2.1   jps    查看是否有jar的进程
+   2.2   如果没有，就cd到你放置tencent***.jar的地方
+   ，我们应该在 
+   cd /usr/local    
+   ls查看tencentxxx.jar是否在这里
+   2.3 切换到位置后，启动
+   java -jar tencentxxxx.jar &
+   
+3. 启动前端页面服务器，我们放置的在Nginx服务器中
+   如果访问  http://xxx.xxx.xxx.xxx/register.html
+   显示无法访问，那么大概率没有启动Nginx
+   3.1  cd /usr/local/nginx/sbin
+   3.2  ./nginx  
+   如果报错显示一个  /var/run/nginx/nginx.pid
+   not found...
+   这个代表启动的时候会在/var/run/nginx这个目录
+   下生成一个进程ID文件，没有的话我们创建即可。
+   
+   mkdir -p /var/run/nginx
+   3.3 创建完成再次启动 ./nginx

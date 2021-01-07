@@ -1,0 +1,170 @@
+<!--
+ * @Author: 93193
+ * @Date: 2021-01-04 10:25:29
+ * @LastEditTime: 2021-01-07 10:06:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \web\chat.html
+ 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat WIndow</title>
+    <!--在网页的页签上加入一个小icon图标-->
+    <link rel="shortcut icon" href="images/bq.png" type="image/x-icon">
+    <!--引入register.css文件-->
+    <link rel="stylesheet" href="css/chat.css">
+    <!--引入饿了么UI的CSS文件-->
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <!--div整个网页-->
+    <div id="app">
+        <div id="main">
+            <div id="left">
+                <div id="records">
+                    <div class = "message_line" v-for="r in messageRecords">
+                        <div v-if="r.isMe == 0" class="r">
+                            <div class="r_left">
+                                <img :src="r.user.face" class="record_face">
+                            </div>
+                            <div class="r_right">
+                                <div class="nickname">{{r.user.account}}</div>
+                                <div class="message_bg">{{r.message}}</div>
+                            </div>
+                        </div>
+                        <div v-if="r.isMe == 1" class="rr">
+                            <div class="message_bg_me">{{r.message}}</div>
+                            <div>
+                                <img :src="r.user.face" class="record_face">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tools"></div>
+                <div id="contents">
+                    <textarea @keydown.enter="sendMessage" v-model="message" id="contents_text"></textarea>
+                </div>
+
+                <div id="buttons">
+                    <el-button>关闭</el-button>
+                    <el-button @click="sendMessage" type="primary">发送</el-button>
+                </div>
+            </div>
+            <!--循环好友列表-->
+            <div id="right">
+                <div class="online" v-for="f in friends">
+                    <img class="face" :src="f.face">
+                    <span class="text1">{{f.account.substring(0,12)}}</span>
+                    <span class="jianbian">{{f.account.substring(12)}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--引入vue/ajax/饿了么框架-->
+    <script src="js/vue.js"></script>
+    <!--发送数据包-->
+    <script src="js/axios.min.js"></script>
+    <script src="js/index.js"></script>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                ws: null,
+                message: '',
+                //好友
+                friends: [],
+                messageRecords: [
+                    //{ user: { account: 'admin', face: 'images/game.ico' }, message: 'hello', isMe: 1 },
+                    //{ user: { account: 'bigpig', face: 'images/default_face.png' }, message: 'nice', isMe: 0 }
+                ]
+            },
+            methods: {
+                doOpen() {
+                    this.$notify({
+                        title: '最新消息',
+                        message: 'can you see me?',
+                        position: 'bottom-right',
+                        //type: 'info'
+                    })
+                },
+                sendMessage() {
+                    //判断是否输入空格
+                    if(this.message.trim()){
+                        //发送给后端
+                        this.ws.send(this.message);
+                    }
+                    //发送完数据，清空输入框
+                    this.message = '';
+                    //给予输入框焦点光标
+                    document.getElementById("contents_text").focus();
+                    //alert(this.message); 
+                },
+                doMessege(res) {
+                    var responseEntity = JSON.parse(res.data);
+                    //10代表好友列表
+                    if (responseEntity.code == 10) {
+                        //更新好友列表
+                        this.refreshOnlineUser(responseEntity.data);
+                    }
+                    //20代表好友消息
+                    if (responseEntity.code == 20) {
+                        //更新聊天消息
+                        this.refreshMessage(responseEntity.data, responseEntity.message);
+                    }
+                    //网页后台输出用户账号  console.log(res.data);
+                },
+                refreshOnlineUser(data) {
+                    this.friends = data;
+                },
+                refreshMessage(user, message) {
+                    //判断是否是自己发的消息
+                    var isMe = (user.account == sessionStorage.getItem('user') ? 1 : 0);
+                    this.messageRecords.push({ 'user': user, 'message': message,'isMe' : isMe});
+                    //让多页消息时总是显示最新消息
+                    this.$nextTick(() =>{
+                        document.querySelector('#records').scrollTop = document.querySelector('#records').scrollHeight;
+                    });
+                }
+            },
+            //页面挂载的时候会默认执行的方法
+            mounted() {
+                var account = sessionStorage.getItem("user");
+                //如果用户没有登录
+                if (!account) {
+                    this.$message({
+                        showClose: true,
+                        message: '您还没有登录，请先登录ovo',
+                        type: 'error',
+                        center: true,
+                        showClose: true,
+                        onClose: function () {
+                            location = 'index.html';
+                        }
+                    });
+                    //alert('请先登录');
+                    location = 'login.html';
+                } else {
+                    var url = "ws://42.192.145.158:8080/chat?account=" + account;
+                    this.ws = new WebSocket(url);
+                    this.ws.onopen = this.doOpen;
+                    //alert(1);
+                    this.ws.onmessage = this.doMessege;
+                }
+
+            }
+
+        })
+
+    </script>
+
+</body>
+
+</html>
